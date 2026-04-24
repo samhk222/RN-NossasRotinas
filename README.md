@@ -2,6 +2,9 @@
 
 Não estou usando o expo, estou usando apenas
 
+npm run android
+npm start # em outra aba, para rodar debug
+
 # Usuário e senha do Expo
 
 Usuário: samhk222  
