@@ -1,45 +1,50 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import React, {useState, useEffect, useCallback} from 'react';
+import {StatusBar, useColorScheme, ActivityIndicator, View} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {NavigationContainer} from '@react-navigation/native';
+import {ToastProvider} from './src/components/Toast';
+import AppNavigator from './src/navigation/AppNavigator';
+import ConfiguracaoScreen from './src/screens/ConfiguracaoScreen';
+import {getToken, getBaseUrl} from './src/services/storage';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+  const [isConfigured, setIsConfigured] = useState<boolean | null>(null);
+
+  const checkConfig = useCallback(async () => {
+    const [token, baseUrl] = await Promise.all([getToken(), getBaseUrl()]);
+    setIsConfigured(!!token && !!baseUrl);
+  }, []);
+
+  useEffect(() => {
+    checkConfig();
+  }, [checkConfig]);
+
+  if (isConfigured === null) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f8'}}>
+        <ActivityIndicator size="large" color="#1a1a2e" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <ToastProvider>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <NavigationContainer>
+          {isConfigured ? (
+            <AppNavigator />
+          ) : (
+            <ConfiguracaoScreen
+              isSetup
+              onConfigSaved={() => setIsConfigured(true)}
+            />
+          )}
+        </NavigationContainer>
+      </ToastProvider>
     </SafeAreaProvider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;

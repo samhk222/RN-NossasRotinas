@@ -1,0 +1,49 @@
+Esse é um projeto novo. O objetivo dele é o seguinte, ele terá botões na tela, Esse botões farão uma chamada post para um determinado endereço.
+Ao abrir o programa a primeira vez, caso não tenha um token, teremos que informá-lo. Esse token será salvo localmente, porque todas as chamadas a esse token precisa ser feita com ele.
+Caso abra o programa novamente, e já tenha o token, vamos para a página inicial.
+DEvemos ter um menu inferior, com duas abas
+
+- Rotina
+- Configuração
+
+# A página de rotina
+
+Vamos, caso não esteja cacheado, chamar o endpoint abaixo (curl exemplo : curl --location 'http://app.samuca.com.test/api/utils/rotinas' \
+--header 'Accept: application/json' \
+--header 'Authorization: Bearer {aqui colocar o token que está na pagina inicial, que é o mesmo que está na página de configurações}' )
+
+Ele retorna isso
+
+{
+"items": [
+{
+"id": 3049,
+"descricao": "Alternar novo oeste",
+"texto": "Alterna as luzes no novo Oeste",
+"trigger": "nfc-01"
+},
+{
+"id": 3050,
+"descricao": "Ligar conforto eloísa",
+"texto": "Desliga o ventilador, e coloca o ar condicionado em 24 graus",
+"trigger": "nfc-02"
+}
+]
+}
+
+O que precisa ser implementado, página simples, com duas colunas, de cada lado, um botão (descricao da api) e uma descrição do que ele faz (que é o texto)
+
+Ao ser precionado esse botão, precisamos chamar o
+
+curl --location 'http://app.samuca.com.test/api/mkzense/{aqui é o valor de trigger, que está vindo na api}/trigger'
+
+# A página de configuração
+
+1 - Onde informamos o token
+2 - Onde informamos o samuca_base_url
+
+# Considerações
+
+- Não chamar o endpoint para listar as rotinas sempre que abrir o programa, precisa ser cacheado. Criar 1 botão no topo, na barra, para refresh caso eu queira, mas a chamada ao endpoint de list precisa ser cacheada
+- Usar um design moderno para o botão, usar como base uber, ou airbnb por exemplo
+- Para cada retorno da api, deve ser exibido uma mensagem no bottom, que foi sucesso, e que suma em sequencia

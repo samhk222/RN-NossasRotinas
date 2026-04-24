@@ -1,3 +1,7 @@
+# Esse projeto está diferente
+
+Não estou usando o expo, estou usando apenas
+
 # Usuário e senha do Expo
 
 Usuário: samhk222  
